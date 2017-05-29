@@ -1,0 +1,72 @@
+*{box-sizing: border-box;}
+
+body{
+	background-color: #232323;
+	text-align: center;
+	color: white;
+}
+
+.headCont {
+	background-color: #4278AB;
+	margin: 0;
+	padding: 10px;
+}
+
+.currentColor{
+	display: block;
+	font-size: 1.8em;
+}
+
+.squareContainer{
+	max-width: 600px;
+	width: 60%;
+	margin: 0 auto;
+}
+.square {
+	width: 30%;
+	padding-bottom: 30%;
+	float: left;
+	border-radius: 0 50% 0 50%;
+	display: inline-block;
+	margin: 1.66%;
+	transition: all .5s ease-in-out;
+}
+
+.stats{
+	width: 100%;
+	background-color: white;
+	margin-bottom: 20px;
+
+}
+
+.stat{
+	display: inline-block;
+	margin: 0 50px;
+	color: #4278AB;
+}
+
+
+.statBtn{
+	border: none;
+	background-color: white;
+	outline: none;
+}
+
+.statBtn:hover{
+	background-color: #4278AB;
+	color: white;
+}
+
+.mode {
+	background-color: #4278AB;
+	color: white;
+}
+ @media screen and (max-width: 650px){
+ 	.currentColor{
+ 		font-size: 1.2em;
+ 	}
+
+ 	.stat {
+ 		margin: 0 10px;
+ 	}
+ }

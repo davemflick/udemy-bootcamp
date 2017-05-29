@@ -1,0 +1,16 @@
+body{
+	background-color: #ddd;
+}
+
+.h1{
+	color: red;
+}
+
+.li{
+	color: orange;
+}
+
+.loremCont {
+	border: 1px solid red;
+	background-color: #fd45a3;
+}

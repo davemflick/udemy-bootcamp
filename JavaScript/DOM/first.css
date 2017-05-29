@@ -1,0 +1,15 @@
+*{box-sizing: border-box;}
+body{
+	background-color: #eee;
+}
+
+.one{
+	background-color: red;
+	border: 1px solid blue;
+	transition: all 1s ease-in-out;
+}
+
+
+.purple{
+	background: purple;
+}
