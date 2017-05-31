@@ -1,0 +1,14 @@
+<% include partials/header %>
+
+<h2>The dog in the params is a '<%= breed.toUpperCase() %>'</h2>
+<%= 5+5 %>
+
+
+<%if(breed.toLowerCase() === "golden"){ %>
+	<p> That dog is a shedder </p> 
+<% } else { %>
+	<p> You didn't pick a golden </p>
+<% } %>
+
+<% include partials/footer %>
+
