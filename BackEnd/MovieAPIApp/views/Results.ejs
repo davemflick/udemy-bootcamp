@@ -1,0 +1,10 @@
+<% include partials/Header %>
+
+<h1>Results list</h1>
+<ul>
+<% data.Search.forEach(function(movie){ %>
+	<li><%= movie["Title"] %></li>
+<%})%>
+</ul>
+
+<% include partials/Footer %>
