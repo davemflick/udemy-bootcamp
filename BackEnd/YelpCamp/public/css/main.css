@@ -1,0 +1,28 @@
+body{
+	text-align: center;
+}
+
+.CGPageTitle {
+	margin-top: 0;
+}
+
+.campgroundsContainer{
+	padding: 0;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.footerP{
+	margin-top: 50px;
+}
+
+.addCampForm {
+	padding: 15px;
+}
+
+.formForNew{
+	width: 30%;
+	margin: 0 auto;
+}
