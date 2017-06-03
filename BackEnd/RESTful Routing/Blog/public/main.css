@@ -1,0 +1,22 @@
+
+
+body{
+	background-color: #eee;
+	text-align: center;
+}
+
+i.icon.code{
+	font-size: 2em;
+}
+
+.container.main {
+	margin-top: 7.0em;
+}
+
+.image {
+	max-width: 350px;
+}
+
+.deleteBtnForm {
+	display: inline;
+}
