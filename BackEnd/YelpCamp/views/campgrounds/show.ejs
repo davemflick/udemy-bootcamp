@@ -1,0 +1,11 @@
+<% include ../partials/header %>
+<h1>Show Page</h1>
+<h2><%=campground.name%></h2>
+<img width:"400px" src="<%=campground.image%>">
+<p><%=campground.description%></p>
+
+<% campground.comments.forEach(comment=>{ %>
+	<p><%= comment.author %> - <%= comment.text %> </p>
+<%});%>
+
+<% include ../partials/footer %>

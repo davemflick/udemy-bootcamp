@@ -2,27 +2,21 @@ var express = require("express");
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var Campground = require("./modals/campground");
+var seedDB = require("./seeds");
+
+//Remove all existing campgrounds then add New Campgrounds.
+seedDB();
 
 mongoose.connect("mongodb://localhost/yelp_camp");
 
-//Schema Set-up;
-var campgroundSchema = new mongoose.Schema({
-	name: String,
-	image: String,
-	description: String
-});
-var Campground = mongoose.model("Campground", campgroundSchema);
+
+
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
-
-// Campground.create({
-// 	name: "Campground 1",
-// 	image: "http://2.bp.blogspot.com/_OkIy_bZqAGI/TI8pXXqfj9I/AAAAAAAAAAM/1o-6AbD4QS4/s1600/tent.gif",
-// 	description: "This is the first campsite, it's not real and doesn't exist. Your mom smells of elderberries."
-// },(err,cg)=>{ return err ? console.log(err): console.log(cg);});
 
 //Landing(home) page
 app.get("/", (req, res)=>{
@@ -38,11 +32,10 @@ app.get("/campgrounds", (req,res)=>{
 		if(err){
 			console.log(err);
 		} else {
-			res.render("index", {campgrounds: campgrounds});
+			res.render("campgrounds/index", {campgrounds: campgrounds});
 		}
 	});
 });
-
 
 //Post new campground
 //RESTFULL-ROUTE -->CREATE
@@ -65,18 +58,38 @@ app.post("/campgrounds", (req,res)=>{
 //This needs to be before SHOW ROUTE otherwise /new wouldn't work.
 //RESTFULL-ROUTE -->NEW  (Show form to create new object);
 app.get("/campgrounds/new", (req, res)=>{
-	res.render("newCG");
+	res.render("campgrounds/new");
 });
 
 //RESTFULL-ROUTE -->SHOW
 app.get("/campgrounds/:id", (req, res)=>{
 	//find campground with provided ID
-	Campground.findById(req.params.id, function(err, foundCampground){
-		return err ? console.log(err) : res.render("show", {campground: foundCampground});
+	Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
+		if(err){
+			console.log(err);
+		} else {
+			//render show template with that campground
+			console.log("found campground");
+			res.render("campgrounds/show", {campground: foundCampground});
+		}
 	});
-	//render show template with that campground
+});
+
+// ====================
+//COMMENTS ROUTES
+//=====================
+
+app.get("/campgrounds/:id/comments/new", (req, res)=>{
+	Campground.findById(req.params.id, (err, campground)=>{
+		if(err){
+			console.log(err);
+		} else {
+			res.render("comments/new", {campground: campground});
+		}
+	});
 	
 });
+
 
 
 
