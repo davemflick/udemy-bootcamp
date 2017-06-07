@@ -2,7 +2,8 @@ var express = require("express");
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var Campground = require("./modals/campground");
+var Campground = require("./models/campground");
+var Comment = require("./models/comments");
 var seedDB = require("./seeds");
 
 //Remove all existing campgrounds then add New Campgrounds.
@@ -11,9 +12,7 @@ seedDB();
 mongoose.connect("mongodb://localhost/yelp_camp");
 
 
-
-
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -87,10 +86,31 @@ app.get("/campgrounds/:id/comments/new", (req, res)=>{
 			res.render("comments/new", {campground: campground});
 		}
 	});
-	
 });
 
-
+app.post("/campgrounds/:id/comments", (req,res)=>{
+	//lookup campground using ID
+	Campground.findById(req.params.id, (err, campground)=>{
+		if(err){
+			console.log(err);
+			res.redirect("/campgrounds");
+		} else {
+			//create new comment
+			Comment.create(req.body.comment, (err, comment)=>{
+				if(err){
+					console.log(err);
+				} else {
+					campground.comments.push(comment);
+					campground.save();
+					res.redirect("/campgrounds/" + campground._id);
+				}
+			});
+		}
+	});
+	
+	//connect new comment to campground
+	//redirect campgorund show page
+});
 
 
 //REMOVE /favicon.ico 404 NOT FOUND error

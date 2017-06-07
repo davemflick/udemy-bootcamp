@@ -1,5 +1,15 @@
-body{
-	text-align: center;
+
+.thumbnail img {
+	width: 100%;
+}
+
+.thumbnail {
+	padding: 0;
+}
+
+.thumbnail .caption-full{
+	margin: 1.0em;
+	padding: 5px;
 }
 
 .CGPageTitle {
