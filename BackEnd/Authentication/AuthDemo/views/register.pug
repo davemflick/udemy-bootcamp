@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	h1 Hello this is register
+	form(action="/register", method="POST")
+		input(type="text", name="username", placeholder="username")
+		input(type="password", name="password", placeholder="password")
+		button Submit
+
+	li
+		a(href="/") Home page
+	li
+		a(href="/login") Log In if you have account
+	li
+		a(href="/logout") Logout!

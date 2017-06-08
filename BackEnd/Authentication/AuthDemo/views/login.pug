@@ -1,0 +1,17 @@
+extends layout
+
+block content
+	h1 Login to See Secret Page
+	form(action="/login", method="POST")
+		label Username 
+			input(type="text", name="username", placeholder="username")
+		label Password 
+			input(type="password", name="password", placeholder="password")
+		button Submit
+
+	li
+		a(href="/") Home page
+	li
+		a(href="/register") Sign Up if new
+	li
+		a(href="/logout") Logout!
