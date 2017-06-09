@@ -5,6 +5,9 @@ var mongoose = require('mongoose');
 var Campground = require("./models/campground");
 var Comment = require("./models/comments");
 var seedDB = require("./seeds");
+var passport = require("passport");
+var LocalStrategy = require("passport-local");
+var User = require("./models/user");
 
 //Remove all existing campgrounds then add New Campgrounds.
 seedDB();
@@ -16,6 +19,17 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
+//PASSPORT CONFIGURATION
+app.use(require("express-session")({
+	secret: "This is the secret thingy",
+	resave: false,
+	saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //Landing(home) page
 app.get("/", (req, res)=>{
@@ -111,6 +125,29 @@ app.post("/campgrounds/:id/comments", (req,res)=>{
 	//connect new comment to campground
 	//redirect campgorund show page
 });
+
+//================
+//AUTH ROUTES
+//================
+//show register form
+app.get("/register", function(req, res){
+	res.render("register");
+});
+//handle sign-up logic
+app.post("/register", function(req, res){
+	var newUser = new User({username: req.body.username});
+	User.register(newUser, req.body.password, function(err, user){
+		if(err){
+			console.log(err);
+			res.render("register");
+		}
+		passport.authenticate("local")(req, res, function(){
+			res.redirect("/campgrounds");
+		});
+	});
+})
+
+
 
 
 //REMOVE /favicon.ico 404 NOT FOUND error
