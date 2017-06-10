@@ -9,8 +9,14 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var User = require("./models/user");
 
+//LOAD IN ROUTE FILES
+var commentRoutes = require("./routes/comments");
+var campgroundRoutes = require("./routes/campgrounds");
+var authRoutes = require("./routes/auth");
+
+
 //Remove all existing campgrounds then add New Campgrounds.
-seedDB();
+//seedDB();
 
 mongoose.connect("mongodb://localhost/yelp_camp");
 
@@ -44,139 +50,9 @@ app.get("/", (req, res)=>{
 });
 
 
-//Campgrounds route
-//RESTFULL-ROUTE -->INDEX
-app.get("/campgrounds", (req,res)=>{
-
-	//Get all campground from db, then render file
-	Campground.find({}, (err, campgrounds)=>{
-		if(err){
-			console.log(err);
-		} else {
-			res.render("campgrounds/index", {campgrounds: campgrounds});
-		}
-	});
-});
-
-//Post new campground
-//RESTFULL-ROUTE -->CREATE
-app.post("/campgrounds", (req,res)=>{
-	let name = req.body.campName;
-	let image = req.body.imageLink;
-	let description = req.body.campDescription;
-	let newCampground = {name: name, image: image, description: description};
-	//Create new campground, save to db, reroute to /campgrounds
-	Campground.create(newCampground, (err, campground)=>{
-		if(err){
-			console.log(err);
-		} else {
-			res.redirect("/campgrounds");
-		}
-	});
-});
-
-//form to make new campground -->restful convention to use /new
-//This needs to be before SHOW ROUTE otherwise /new wouldn't work.
-//RESTFULL-ROUTE -->NEW  (Show form to create new object);
-app.get("/campgrounds/new", (req, res)=>{
-	res.render("campgrounds/new");
-});
-
-//RESTFULL-ROUTE -->SHOW
-app.get("/campgrounds/:id", (req, res)=>{
-	//find campground with provided ID
-	Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
-		if(err){
-			console.log(err);
-		} else {
-			//render show template with that campground
-			console.log("found campground");
-			res.render("campgrounds/show", {campground: foundCampground});
-		}
-	});
-});
-
-// ====================
-//COMMENTS ROUTES
-//=====================
-
-app.get("/campgrounds/:id/comments/new", isLoggedIn, (req, res)=>{
-	Campground.findById(req.params.id, (err, campground)=>{
-		if(err){
-			console.log(err);
-		} else {
-			res.render("comments/new", {campground: campground});
-		}
-	});
-});
-
-app.post("/campgrounds/:id/comments", isLoggedIn, (req,res)=>{
-	//lookup campground using ID
-	Campground.findById(req.params.id, (err, campground)=>{
-		if(err){
-			console.log(err);
-			res.redirect("/campgrounds");
-		} else {
-			//create new comment
-			Comment.create(req.body.comment, (err, comment)=>{
-				if(err){
-					console.log(err);
-				} else {
-					campground.comments.push(comment);
-					campground.save();
-					res.redirect("/campgrounds/" + campground._id);
-				}
-			});
-		}
-	});
-	
-	//connect new comment to campground
-	//redirect campgorund show page
-});
-
-//================
-//AUTH ROUTES
-//================
-//show register form
-app.get("/register", function(req, res){
-	res.render("register");
-});
-//handle sign-up logic
-app.post("/register", function(req, res){
-	var newUser = new User({username: req.body.username});
-	User.register(newUser, req.body.password, function(err, user){
-		if(err){
-			console.log(err);
-			res.render("register");
-		}
-		passport.authenticate("local")(req, res, function(){
-			res.redirect("/campgrounds");
-		});
-	});
-})
-
-// show login form
-app.get("/login", (req, res)=>{
-	res.render("login");
-});
-//handle login logic (uses middleware, ending callback not neccessary to fill out)
-app.post("/login", 
-	passport.authenticate("local", {successRedirect: "/campgrounds", failureRedirect:"/login"}),
-	(req,res)=>{});
-
-//logout route
-app.get("/logout", (req, res)=>{
-	req.logout();
-	res.redirect("/campgrounds");
-});
-
-//check if person is logged in (middleware function)
-function isLoggedIn(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login");
-}
+app.use(authRoutes);
+app.use("/campgrounds", campgroundRoutes);
+app.use("/campgrounds/:id/comments", commentRoutes);
 
 
 
@@ -189,14 +65,6 @@ app.get('/favicon.ico', function(req, res) {
 app.listen(3000 || process.env.PORT, process.env.IP, ()=>{
 	console.log("YelpCamp Server is Running");
 });
-
-
-
-
-
-
-
-
 
 
 

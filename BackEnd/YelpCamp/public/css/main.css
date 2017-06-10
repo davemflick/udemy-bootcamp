@@ -1,10 +1,13 @@
 
+
+
 .thumbnail img {
 	width: 100%;
 }
 
 .thumbnail {
 	padding: 0;
+	text-align: center;
 }
 
 .thumbnail .caption-full{
@@ -14,6 +17,7 @@
 
 .CGPageTitle {
 	margin-top: 0;
+	text-align: center;
 }
 
 .campgroundsContainer{
@@ -35,4 +39,8 @@
 .formForNew{
 	width: 30%;
 	margin: 0 auto;
+}
+
+.mostPopTit {
+	text-align: center;
 }
