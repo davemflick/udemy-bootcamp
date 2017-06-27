@@ -64,30 +64,15 @@ router.get("/:id", (req, res)=>{
 
 //RESTFUL-ROUTE --> EDIT
 
-router.get("/:id/edit", (req, res)=>{
-	//is user logged in? if not, redirect. If so, do they own campground? if so let them edit
-	if(req.isAuthenticated()){
-		Campground.findById(req.params.id, (err,foundCampground)=>{
-			if(err){
-				console.log(err);
-				res.redirect("/campgrounds");
-			} else {
-				if(foundCampground.author.id.equals(req.user._id)){
-					res.render("campgrounds/edit", {campground: foundCampground});
-				} else {
-					res.send("You do not have permission to do that")
-				}
-			}
-		});
-	}else {
-		res.redirect('/campgrounds')
-	}
-
+router.get("/:id/edit", checkCampgroundOwnership, (req, res)=>{
+	Campground.findById(req.params.id, (err,foundCampground)=>{
+		res.render("campgrounds/edit", {campground: foundCampground});
+	});
 });
 
 //RESTFUL-ROUTE ==> UPDATE
 
-router.put("/:id", (req,res)=>{
+router.put("/:id", checkCampgroundOwnership, (req,res)=>{
 	//find and update the correct campground
 	Campground.findByIdAndUpdate(req.params.id, req.body.campground, (err, updatedCamp)=>{
 		if(err){
@@ -103,7 +88,7 @@ router.put("/:id", (req,res)=>{
 
 //RESTFUL-ROUTE ==> DELETE
 
-router.delete("/:id", (req, res)=>{
+router.delete("/:id", checkCampgroundOwnership, (req, res)=>{
 	Campground.findByIdAndRemove(req.params.id, (err)=>{
 		err ? res.redirect("/campgrounds") : res.redirect("/campgrounds")
 	});
@@ -118,5 +103,38 @@ function isLoggedIn(req, res, next){
 	res.redirect("/login");
 }
 
+//middleware to check if user has permision to edit/update/delete
+
+function checkCampgroundOwnership(req, res, next){
+	if(req.isAuthenticated()){
+		Campground.findById(req.params.id, (err,foundCampground)=>{
+			if(err){
+				res.redirect("back");
+			} else {
+				if(foundCampground.author.id.equals(req.user._id)){
+					next();
+				} else {
+					res.redirect("back");
+				}
+			}
+		});
+	} else {
+		res.redirect('back')
+	}
+}
+
+
+
+
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
