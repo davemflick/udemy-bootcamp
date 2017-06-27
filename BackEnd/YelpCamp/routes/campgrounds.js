@@ -62,6 +62,54 @@ router.get("/:id", (req, res)=>{
 	});
 });
 
+//RESTFUL-ROUTE --> EDIT
+
+router.get("/:id/edit", (req, res)=>{
+	//is user logged in? if not, redirect. If so, do they own campground? if so let them edit
+	if(req.isAuthenticated()){
+		Campground.findById(req.params.id, (err,foundCampground)=>{
+			if(err){
+				console.log(err);
+				res.redirect("/campgrounds");
+			} else {
+				if(foundCampground.author.id.equals(req.user._id)){
+					res.render("campgrounds/edit", {campground: foundCampground});
+				} else {
+					res.send("You do not have permission to do that")
+				}
+			}
+		});
+	}else {
+		res.redirect('/campgrounds')
+	}
+
+});
+
+//RESTFUL-ROUTE ==> UPDATE
+
+router.put("/:id", (req,res)=>{
+	//find and update the correct campground
+	Campground.findByIdAndUpdate(req.params.id, req.body.campground, (err, updatedCamp)=>{
+		if(err){
+			res.redirect("/campgrounds");
+			console.log(err);
+		} else {
+			res.redirect("/campgrounds/" + req.params.id);
+		}
+	});
+	//redirect somewhere
+});
+
+
+//RESTFUL-ROUTE ==> DELETE
+
+router.delete("/:id", (req, res)=>{
+	Campground.findByIdAndRemove(req.params.id, (err)=>{
+		err ? res.redirect("/campgrounds") : res.redirect("/campgrounds")
+	});
+});
+
+
 //check if person is logged in (middleware function)
 function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){

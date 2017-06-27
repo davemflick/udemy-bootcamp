@@ -7,7 +7,6 @@
 
 .thumbnail {
 	padding: 0;
-	text-align: center;
 }
 
 .thumbnail .caption-full{
@@ -25,6 +24,7 @@
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+	text-align: center;
 	flex-wrap: wrap;
 }
 
@@ -43,4 +43,8 @@
 
 .mostPopTit {
 	text-align: center;
+}
+
+#deleteForm {
+	display: inline;
 }
