@@ -45,6 +45,6 @@
 	text-align: center;
 }
 
-#deleteForm {
+.deleteForm {
 	display: inline;
 }
