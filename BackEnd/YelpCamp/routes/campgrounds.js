@@ -26,6 +26,7 @@ router.get("/", (req,res)=>{
 router.post("/", isLoggedIn, (req,res)=>{
 	let name = req.body.campName;
 	let image = req.body.imageLink;
+	let price = req.body.price;
 	if(image === ""){
 		image = "https://d2ujflorbtfzji.cloudfront.net/key-image/0d323c24-1ae0-403b-8387-491b4fd03b00.png"
 	}
@@ -34,7 +35,7 @@ router.post("/", isLoggedIn, (req,res)=>{
 		id: req.user._id,
 		username: req.user.username
 	};
-	let newCampground = {name: name, image: image, description: description, author: author};
+	let newCampground = {name: name, image: image, price:price, description: description, author: author};
 	//Create new campground, save to db, reroute to /campgrounds
 	Campground.create(newCampground, (err, campground)=>{
 		if(err){
