@@ -20,7 +20,13 @@ var authRoutes = require("./routes/auth");
 //Remove all existing campgrounds then add New Campgrounds.
 //seedDB();
 
-mongoose.connect("mongodb://localhost/yelp_camp");
+//Create mongodb://localhost/yelp_camp into an environment variable called DATABASEURLLOCAL
+//By typing into the command line 'export DATABASEURLLOCAL=mongodb://localhost/yelp_camp'
+//Now process.env.DATABASEURLLOCAL is mongodb://localhost/yelp_camp
+//INSIDE HEROKU SETTINGS --> GO TO CONFIGURE VARIABLES TO ADD mongodb://<username>:<password>@ds049935.mlab.com:49935/yelpcampflick to same variable name
+var url = process.env.DATABASEURLLOCAL || 'mongodb://localhost/yelp_camp';
+mongoose.connect(url);
+
 
 //connect flash
 app.use(flash());
@@ -65,16 +71,14 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 
 
 
-
 //REMOVE /favicon.ico 404 NOT FOUND error
 app.get('/favicon.ico', function(req, res) {
     res.sendStatus(204);
 });
 
-app.listen(3000 || process.env.PORT, process.env.IP, ()=>{
+app.listen(process.env.PORT || 3000, process.env.IP, ()=>{
 	console.log("YelpCamp Server is Running");
 });
-
 
 
 
