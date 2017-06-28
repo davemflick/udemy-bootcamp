@@ -40,6 +40,7 @@ router.post("/", isLoggedIn, (req,res)=>{
 		if(err){
 			console.log(err);
 		} else {
+			req.flash("success", "Campground successfully created");
 			res.redirect("/campgrounds");
 		}
 	});
@@ -94,7 +95,13 @@ router.put("/:id", checkCampgroundOwnership, (req,res)=>{
 
 router.delete("/:id", checkCampgroundOwnership, (req, res)=>{
 	Campground.findByIdAndRemove(req.params.id, (err)=>{
-		err ? res.redirect("/campgrounds") : res.redirect("/campgrounds")
+		if(err){
+			req.flash("error", "Could not delete");
+			res.redirect("/campgrounds");
+		}else {
+			req.flash("success", "Campground deleted");
+			res.redirect("/campgrounds");
+		}
 	});
 });
 

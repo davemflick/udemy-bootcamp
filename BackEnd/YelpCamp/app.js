@@ -9,6 +9,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var User = require("./models/user");
 var methodOverride = require("method-override");
+var flash = require("connect-flash");
 
 //LOAD IN ROUTE FILES
 var commentRoutes = require("./routes/comments");
@@ -21,6 +22,8 @@ var authRoutes = require("./routes/auth");
 
 mongoose.connect("mongodb://localhost/yelp_camp");
 
+//connect flash
+app.use(flash());
 
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
@@ -45,6 +48,8 @@ passport.deserializeUser(User.deserializeUser());
 //middleware to determine if user is logged in or not, pass to every template
 app.use((req,res,next)=>{
 	res.locals.currentUser = req.user;
+	res.locals.error = req.flash("error");
+	res.locals.success = req.flash("success");
 	next();
 });
 

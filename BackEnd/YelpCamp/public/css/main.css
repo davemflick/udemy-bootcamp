@@ -48,3 +48,9 @@
 .deleteForm {
 	display: inline;
 }
+
+
+.alert {
+	margin-bottom: 10px;
+	padding: 4px;
+}
