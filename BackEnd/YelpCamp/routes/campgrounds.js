@@ -2,6 +2,10 @@ var express = require("express");
 var router = express.Router();
 var Campground = require("../models/campground");
 var Comment = require("../models/comments");
+var middleware = require("../middleware/index")
+
+var isLoggedIn = middleware.isLoggedIn;
+var checkCampgroundOwnership = middleware.checkCampgroundOwnership;
 
 //Campgrounds route
 //RESTFULL-ROUTE -->INDEX
@@ -95,33 +99,10 @@ router.delete("/:id", checkCampgroundOwnership, (req, res)=>{
 });
 
 
-//check if person is logged in (middleware function)
-function isLoggedIn(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login");
-}
 
-//middleware to check if user has permision to edit/update/delete
 
-function checkCampgroundOwnership(req, res, next){
-	if(req.isAuthenticated()){
-		Campground.findById(req.params.id, (err,foundCampground)=>{
-			if(err){
-				res.redirect("back");
-			} else {
-				if(foundCampground.author.id.equals(req.user._id)){
-					next();
-				} else {
-					res.redirect("back");
-				}
-			}
-		});
-	} else {
-		res.redirect('back')
-	}
-}
+
+
 
 
 

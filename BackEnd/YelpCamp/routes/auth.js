@@ -39,12 +39,5 @@ router.get("/logout", (req, res)=>{
 	res.redirect("/campgrounds");
 });
 
-//check if person is logged in (middleware function)
-function isLoggedIn(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login");
-}
 
 module.exports = router;

@@ -2,7 +2,10 @@ var express = require("express");
 var router = express.Router({mergeParams: true});
 var Campground = require("../models/campground");
 var Comment = require("../models/comments");
+var middleware = require("../middleware/index")
 
+var isLoggedIn = middleware.isLoggedIn;
+var checkCommentOwnership = middleware.checkCommentOwnership;
 // ====================
 //COMMENTS ROUTES
 //=====================
@@ -78,33 +81,6 @@ router.delete("/:comment_id", checkCommentOwnership, (req, res)=>{
 	})
 });
 
-//check if person is logged in (middleware function)
-function isLoggedIn(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login");
-}
-
-//middleware to check if user has permision to edit/update/delete
-
-function checkCommentOwnership(req, res, next){
-	if(req.isAuthenticated()){
-		Comment.findById(req.params.comment_id, (err,foundComment)=>{
-			if(err){
-				res.redirect("back");
-			} else {
-				if(foundComment.author.id.equals(req.user._id)){
-					next();
-				} else {
-					res.redirect("back");
-				}
-			}
-		});
-	} else {
-		res.redirect('back')
-	}
-}
 
 module.exports = router;
 
