@@ -54,3 +54,13 @@
 	margin-bottom: 10px;
 	padding: 4px;
 }
+
+.logRegCont {
+	margin: 0 auto;
+	text-align: center;
+	width: 30%;
+}
+
+.logRegCont input {
+	width: 100%;
+}

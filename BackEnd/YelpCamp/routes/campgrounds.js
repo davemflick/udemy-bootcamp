@@ -108,14 +108,6 @@ router.delete("/:id", checkCampgroundOwnership, (req, res)=>{
 
 
 
-
-
-
-
-
-
-
-
 module.exports = router;
 
 
